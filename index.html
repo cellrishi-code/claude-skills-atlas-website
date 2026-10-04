@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Claude Skills Atlas</title>
+<meta name="description" content="A community-driven open-source library of reusable Claude skills, prompts, workflows, agents, and templates.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0a1a;--bg2:#161129;--panel:#1d1636;--ink:#f4f0ff;--mute:#b6aed4;--line:#050310;--vio:#8b5cf6;--vio2:#c4b5fd;--cy:#22d3ee;--gr:#4ade80;--ye:#fbbf24;--pk:#fb7185;--px:4px;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d0a1a}}
+:root[data-theme="dark"]{--bg:#0d0a1a}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:calc(76px + env(safe-area-inset-top,0px))}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.6 Inter,system-ui,sans-serif;overflow-x:hidden}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,#0000 0 3px,#00000024 3px 4px);z-index:90}
+h1,h2,h3,.px{font-family:"Press Start 2P",ui-monospace,monospace;line-height:1.4;letter-spacing:0}
+h2{font-size:clamp(18px,3.2vw,28px);margin:0 0 12px}
+h3{font-size:12px;margin:0 0 10px}
+a{color:var(--cy)}
+:focus-visible{outline:3px dashed var(--ye);outline-offset:3px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+section{padding:84px 0;position:relative}
+.sub{color:var(--mute);max-width:62ch;margin:0 0 32px}
+.eyebrow{font:10px "Press Start 2P",monospace;color:var(--gr);margin-bottom:14px;display:block}
+.btn{--c:var(--vio);display:inline-flex;align-items:center;gap:8px;font:11px/1 "Press Start 2P",monospace;color:#fff;background:var(--c);border:var(--px) solid var(--line);box-shadow:var(--px) var(--px) 0 var(--line),inset 0 -4px 0 #0004;padding:14px 16px;text-decoration:none;cursor:pointer;min-height:48px;transition:transform .08s,box-shadow .08s}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--line),inset 0 -4px 0 #0004}
+.btn:active{transform:translate(4px,4px);box-shadow:0 0 0 var(--line)}
+.btn.cy{--c:#0e7490}.btn.gr{--c:#15803d}.btn.ye{--c:var(--ye);color:#1a1200}.btn.gh{--c:#2a2150}
+.card{background:var(--panel);border:var(--px) solid var(--line);box-shadow:6px 6px 0 var(--line),inset 0 0 0 2px #ffffff12}
+.tag{display:inline-block;font:8px/1 "Press Start 2P",monospace;padding:6px 7px;border:3px solid var(--line);background:var(--bg2);color:var(--vio2);margin:0 6px 6px 0}
+.tag.live{background:#14532d;color:#bbf7d0}.tag.soon{background:#78350f;color:#fde68a}.tag.exp{background:#164e63;color:#a5f3fc}
+svg.sp{image-rendering:pixelated;shape-rendering:crispEdges;display:block}
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:#0d0a1af2;border-bottom:var(--px) solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:68px;gap:12px}
+.logo{display:flex;align-items:center;gap:10px;font:11px "Press Start 2P",monospace;color:var(--ink);text-decoration:none}
+.links{display:flex;gap:4px;align-items:center}
+.links a{font:9px "Press Start 2P",monospace;color:var(--mute);text-decoration:none;padding:12px 10px}
+.links a:hover{color:var(--ye)}
+#menu{display:none}
+@media(max-width:860px){#menu{display:inline-flex}.links{display:none;position:absolute;top:68px;left:0;right:0;background:var(--bg2);border-bottom:var(--px) solid var(--line);flex-direction:column;align-items:stretch;padding:8px 20px 16px}.links.open{display:flex}.links a{padding:16px 6px}}
+/* hero */
+.hero{padding:56px 0 88px;overflow:hidden}
+.hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:36px;align-items:center}
+@media(max-width:900px){.hero .wrap{grid-template-columns:1fr}}
+h1{font-size:clamp(26px,5.4vw,54px);margin:0 0 20px;text-shadow:5px 5px 0 var(--vio)}
+h1 em{font-style:normal;color:var(--ye)}
+.cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.term{margin-top:28px;font:15px/1.5 ui-monospace,Menlo,Consolas,monospace;color:var(--gr)}
+.term .bar{background:#2a2150;padding:6px 12px;color:var(--mute);font-size:12px;border-bottom:var(--px) solid var(--line)}
+.term pre{margin:0;padding:14px;white-space:pre-wrap;word-break:break-all;min-height:96px}
+.caret{display:inline-block;width:9px;height:16px;background:var(--gr);vertical-align:-2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.scene{position:relative;height:420px;background:linear-gradient(#1b1240,#2a1a5e 70%,#143a3f 70%);border:var(--px) solid var(--line);box-shadow:8px 8px 0 var(--line);overflow:hidden}
+.scene .ground{position:absolute;left:0;right:0;bottom:0;height:30%;background:repeating-linear-gradient(90deg,#166534 0 32px,#15803d 32px 64px);border-top:var(--px) solid var(--line)}
+.scene .hero-bot{position:absolute;left:50%;bottom:calc(30% - 4px);transform:translateX(-50%);animation:idle 1.2s steps(2) infinite}
+@keyframes idle{50%{transform:translate(-50%,-6px)}}
+.fc{position:absolute;font:8px/1.5 "Press Start 2P",monospace;padding:8px 10px;background:var(--panel);border:3px solid var(--line);box-shadow:4px 4px 0 var(--line);animation:float 3.6s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-10px)}}
+.star{position:absolute;width:4px;height:4px;background:#fff;animation:blink 2.4s steps(1) infinite}
+.planet{position:absolute;top:34px;right:34px}
+.map{position:absolute;left:8%;bottom:34%;transform:rotate(-8deg)}
+/* atlas */
+.tools{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:22px;align-items:center}
+input[type=search],select{font:16px Inter,sans-serif;color:var(--ink);background:var(--bg2);border:var(--px) solid var(--line);padding:12px 14px;min-height:48px;min-width:0}
+input[type=search]{flex:1 1 240px}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:26px}
+.chip{font:9px "Press Start 2P",monospace;background:var(--bg2);color:var(--ink);border:3px solid var(--line);padding:11px 10px;cursor:pointer;min-height:44px}
+.chip[aria-pressed=true]{background:var(--vio);box-shadow:3px 3px 0 var(--line)}
+.regions{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px;margin-bottom:34px}
+.region{text-align:left;color:var(--ink);font:inherit;cursor:pointer;padding:16px;display:grid;gap:8px;transition:transform .12s}
+.region:hover{transform:translateY(-4px) rotate(-.6deg)}
+.region b{font:10px/1.5 "Press Start 2P",monospace}
+.region span{color:var(--mute);font-size:14px}
+.skills{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
+.skill{padding:16px;display:flex;flex-direction:column;gap:12px;cursor:pointer;text-align:left;color:var(--ink);font:inherit;transition:transform .12s}
+.skill:hover{transform:translate(-3px,-3px);box-shadow:9px 9px 0 var(--line)}
+.skill .row{display:flex;gap:12px;align-items:center}
+.skill b{font:10px/1.6 "Press Start 2P",monospace}
+.skill small{color:var(--mute);word-break:break-all}
+.empty{padding:30px;text-align:center;color:var(--mute)}
+/* dialog */
+dialog{background:var(--panel);color:var(--ink);border:var(--px) solid var(--line);box-shadow:10px 10px 0 var(--line);padding:0;max-width:min(640px,calc(100vw - 24px));width:100%;max-height:90vh}
+dialog::backdrop{background:#000b}
+.dlg{padding:24px}
+.dlg h2{font-size:16px;margin:12px 0}
+.dlg p,.dlg li{color:var(--mute)}
+.rel{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 16px}
+.x{position:absolute;top:10px;right:10px;padding:10px 12px}
+/* arsenal */
+.prompts{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px}
+.pcard{padding:16px;display:flex;flex-direction:column;gap:10px;min-height:190px}
+.pcard .hd{font:8px "Press Start 2P",monospace;color:var(--ye)}
+.pcard h3{margin:0;font-size:11px;line-height:1.6}
+.pcard small{color:var(--mute);word-break:break-all}
+.pcard .btn{margin-top:auto;align-self:flex-end;font-size:9px;padding:12px}
+.pop{animation:pop .4s steps(4)}
+@keyframes pop{30%{transform:scale(1.15) rotate(-2deg)}}
+/* how */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;position:relative}
+.steps::before{content:"";position:absolute;top:58px;left:12%;right:12%;border-top:6px dashed var(--vio);z-index:0}
+.step{padding:20px;position:relative;z-index:1;text-align:center}
+.step .n{font:10px "Press Start 2P",monospace;color:var(--ye)}
+.step svg{margin:12px auto}
+@media(max-width:800px){.steps{grid-template-columns:1fr}.steps::before{display:none}}
+/* ecosystem */
+.eco{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+.eco .card{padding:18px}
+.eco p{margin:8px 0 0;font-size:15px;color:var(--mute)}
+/* community */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;margin-bottom:28px}
+.stat{padding:16px;text-align:center}
+.stat b{display:block;font:24px "Press Start 2P",monospace;color:var(--gr);margin-bottom:8px}
+.stat span{font-size:14px;color:var(--mute)}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 28px}
+.flow .tag{margin:0}
+/* tree */
+.tree{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:22px;margin-top:20px}
+.branch{padding:16px;position:relative}
+.branch::before{content:"";position:absolute;top:-22px;left:50%;height:22px;border-left:4px solid var(--vio)}
+.node{display:block;width:100%;text-align:left;font:inherit;font-size:14px;color:var(--ink);text-decoration:none;background:var(--bg2);border:3px solid var(--line);padding:10px;margin-top:10px;transition:transform .1s,background .1s}
+.node:hover{transform:translateX(6px);background:#2a2150}
+.root{width:max-content;max-width:100%;margin:0 auto;padding:14px 18px;font:11px "Press Start 2P",monospace;background:var(--vio);text-align:center}
+/* final */
+.final{text-align:center;background:linear-gradient(#0d0a1a,#2a1a5e 55%,#0d0a1a);border-top:var(--px) solid var(--line);border-bottom:var(--px) solid var(--line);overflow:hidden}
+.final h2{font-size:clamp(20px,4.6vw,40px);text-shadow:4px 4px 0 var(--vio)}
+.final .cta{justify-content:center}
+/* footer */
+footer{background:var(--bg2);padding:44px 0 0;position:relative;overflow:hidden}
+footer .cols{display:flex;flex-wrap:wrap;gap:28px;justify-content:space-between}
+footer nav{position:static;border:0;background:none}
+.flinks{display:flex;flex-wrap:wrap;gap:6px 18px;list-style:none;margin:0;padding:0}
+.flinks a{font:9px "Press Start 2P",monospace;text-decoration:none;color:var(--mute);padding:12px 0;display:inline-block}
+.flinks a:hover{color:var(--ye)}
+.lane{height:64px;position:relative;margin-top:24px;border-top:var(--px) solid var(--line);background:repeating-linear-gradient(90deg,#166534 0 32px,#15803d 32px 64px)}
+.walker{position:absolute;bottom:100%;left:0;animation:walk 18s linear infinite}
+@keyframes walk{from{transform:translateX(-80px)}to{transform:translateX(100vw)}}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .5s,transform .5s}
+.reveal.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<nav aria-label="Main"><div class="wrap">
+<a class="logo" href="#top"><span data-sprite="bot" data-s="3" aria-hidden="true"></span>SKILLS ATLAS</a>
+<button class="btn gh" id="menu" aria-expanded="false" aria-controls="links">MENU</button>
+<div class="links" id="links"><a href="#atlas">Skills</a><a href="#arsenal">Prompts</a><a href="#how">How</a><a href="#ecosystem">Ecosystem</a><a href="#community">Community</a><a href="#grow">Roadmap</a>
+<a class="btn" href="https://github.com/cellrishi-code/claude-skills-atlas" rel="noopener">GITHUB</a></div>
+</div></nav>
+
+<main id="top">
+<header class="hero"><div class="wrap">
+<div>
+<span class="eyebrow">&gt; OPEN SOURCE · MIT LICENSE</span>
+<h1>Claude <em>Skills</em> Atlas</h1>
+<p class="sub" style="margin:0">A community-driven open-source library of reusable Claude skills, prompts, workflows, agents, and templates. <strong>Find it. Copy it. Adapt it. Share it.</strong></p>
+<div class="cta"><a class="btn" href="#atlas">EXPLORE SKILLS</a><a class="btn cy" href="https://github.com/cellrishi-code/claude-skills-atlas" rel="noopener">VIEW ON GITHUB</a><a class="btn gr" href="https://github.com/cellrishi-code/claude-skills-atlas/blob/main/CONTRIBUTING.md" rel="noopener">CONTRIBUTE</a></div>
+<div class="term card" aria-label="Claude Code install commands from the README"><div class="bar">claude-code — install the Atlas</div><pre id="typed" aria-live="off"></pre></div>
+</div>
+<div class="scene" role="img" aria-label="Pixel-art robot explorer standing on a grass field holding an atlas map, with floating skill cards, stars and a tiny planet">
+<i class="star" style="left:12%;top:14%"></i><i class="star" style="left:70%;top:28%;animation-delay:.7s"></i><i class="star" style="left:40%;top:8%;animation-delay:1.3s"></i><i class="star" style="left:88%;top:60%"></i>
+<span class="planet" data-sprite="planet" data-s="5"></span>
+<div class="fc" style="left:6%;top:30%;color:var(--cy)">SKILL<br>code-review</div>
+<div class="fc" style="right:6%;top:50%;color:var(--ye);animation-delay:1s">PROMPT<br>plan-before-code</div>
+<div class="fc" style="left:34%;top:6%;color:var(--gr);animation-delay:.5s">AGENT<br>research</div>
+<span class="map" data-sprite="map" data-s="6"></span>
+<span class="hero-bot" data-sprite="bot" data-s="14"></span>
+<div class="ground"></div>
+</div>
+</div></header>
+
+<section id="atlas" class="reveal"><div class="wrap">
+<span class="eyebrow">&gt; WORLD MAP</span><h2>Explore the Atlas</h2>
+<p class="sub">Every region is a folder in <code>skills/</code>. The list below is generated from the repo's <a href="https://github.com/cellrishi-code/claude-skills-atlas/blob/main/CATALOG.md" rel="noopener">CATALOG.md</a>. Tap a skill to open it.</p>
+<div class="regions" id="regions"></div>
+<div class="tools">
+<input type="search" id="q" placeholder="Search skills…" aria-label="Search skills">
+<select id="sort" aria-label="Sort skills"><option value="az">Sort: A → Z</option><option value="za">Sort: Z → A</option><option value="cat">Sort: Region</option></select>
+<span id="count" class="px" style="font-size:10px;color:var(--ye)" role="status"></span>
+</div>
+<div class="chips" id="chips" role="group" aria-label="Filter by region"></div>
+<div class="skills" id="skills"></div>
+</div></section>
+
+<section id="arsenal" class="reveal" style="background:var(--bg2)"><div class="wrap">
+<span class="eyebrow">&gt; INVENTORY</span><h2>Prompt Arsenal</h2>
+<p class="sub">Copy-paste prompts from <code>prompts/</code>. COPY PROMPT copies the file's raw URL, since the full text lives in the repo and stays the source of truth.</p>
+<div class="prompts" id="prompts"></div>
+</div></section>
+
+<section id="how" class="reveal"><div class="wrap">
+<span class="eyebrow">&gt; QUEST LOG</span><h2>How it works</h2>
+<p class="sub">Discover, copy, adapt, contribute back. The loop from the README, as a map.</p>
+<div class="steps">
+<div class="card step"><div class="n">01</div><span data-sprite="gem" data-c="#22d3ee" data-s="9"></span><h3>Discover</h3><p>Find a skill or prompt by region, or search.</p></div>
+<div class="card step"><div class="n">02</div><span data-sprite="gem" data-c="#fbbf24" data-s="9"></span><h3>Copy</h3><p>Copy it into your Claude workflow and adapt it.</p></div>
+<div class="card step"><div class="n">03</div><span data-sprite="gem" data-c="#4ade80" data-s="9"></span><h3>Build</h3><p>Use it for code, research or study, then open a PR.</p></div>
+</div></div></section>
+
+<section id="ecosystem" class="reveal" style="background:var(--bg2)"><div class="wrap">
+<span class="eyebrow">&gt; PARTY MEMBERS</span><h2>Works with</h2>
+<p class="sub">Only what the README and roadmap actually say.</p>
+<div class="eco">
+<div class="card"><span class="tag live">AVAILABLE</span><h3>Claude Code</h3><p>Install as a plugin marketplace, plus the Atlas Library and GitHub Agent plugins.</p></div>
+<div class="card"><span class="tag live">AVAILABLE</span><h3>Any compatible agent</h3><p>Clone the repo and copy skills, prompts, workflows, agents or templates.</p></div>
+<div class="card"><span class="tag exp">EXPLORING</span><h3>ChatGPT-compatible</h3><p>Roadmap: improve integration and deployment guidance.</p></div>
+<div class="card"><span class="tag soon">COMING SOON</span><h3>Codex &amp; more agents</h3><p>Roadmap: develop Codex and additional agent integrations.</p></div>
+</div></div></section>
+
+<section id="community" class="reveal"><div class="wrap">
+<span class="eyebrow">&gt; MULTIPLAYER</span><h2>Built by the Community</h2>
+<p class="sub">Counts below come straight from the catalog. Live stars, issues and PRs are on GitHub.</p>
+<div class="stats">
+<div class="card stat"><b id="n-s">0</b><span>skills</span></div><div class="card stat"><b id="n-p">0</b><span>prompts</span></div><div class="card stat"><b>3</b><span>workflows</span></div><div class="card stat"><b>1</b><span>agent</span></div></div>
+<div class="flow px" style="font-size:9px" aria-label="Contribution flow"><span class="tag">FORK</span>→<span class="tag">BRANCH</span>→<span class="tag">ADD RESOURCE</span>→<span class="tag">TEST</span>→<span class="tag">PULL REQUEST</span>→<span class="tag">REVIEW</span>→<span class="tag live">MERGE</span></div>
+<div class="cta" style="margin:0"><a class="btn gr" href="https://github.com/cellrishi-code/claude-skills-atlas/blob/main/CONTRIBUTING.md" rel="noopener">CONTRIBUTE TO THE ATLAS →</a><a class="btn gh" href="https://github.com/cellrishi-code/claude-skills-atlas/issues" rel="noopener">ISSUES</a><a class="btn gh" href="https://github.com/cellrishi-code/claude-skills-atlas/pulls" rel="noopener">PULL REQUESTS</a><a class="btn gh" href="https://github.com/cellrishi-code/claude-skills-atlas/blob/main/templates/skill-template.md" rel="noopener">SKILL TEMPLATE</a></div>
+</div></section>
+
+<section id="grow" class="reveal" style="background:var(--bg2)"><div class="wrap">
+<span class="eyebrow">&gt; SKILL TREE</span><h2>Grow the Atlas</h2>
+<p class="sub">Unlock the next nodes from the <a href="https://github.com/cellrishi-code/claude-skills-atlas/blob/main/ROADMAP.md" rel="noopener">ROADMAP</a>. Nodes link to their issues.</p>
+<div class="card root">ATLAS</div>
+<div class="tree">
+<div class="card branch"><h3>Foundation</h3><span class="tag soon">PLANNED</span>
+<a class="node" href="https://github.com/cellrishi-code/claude-skills-atlas/issues/108" rel="noopener">Skill spec &amp; metadata schema</a><a class="node" href="https://github.com/cellrishi-code/claude-skills-atlas/issues/109" rel="noopener">Validation &amp; linting</a><a class="node" href="https://github.com/cellrishi-code/claude-skills-atlas/issues/110" rel="noopener">Machine-readable registry</a></div>
+<div class="card branch"><h3>Trust</h3><span class="tag soon">PLANNED</span>
+<a class="node" href="https://github.com/cellrishi-code/claude-skills-atlas/issues/111" rel="noopener">Security &amp; trust guidelines</a><a class="node" href="https://github.com/cellrishi-code/claude-skills-atlas/issues/112" rel="noopener">Cross-agent compatibility</a><a class="node" href="https://github.com/cellrishi-code/claude-skills-atlas/issues/114" rel="noopener">Quality tiers</a></div>
+<div class="card branch"><h3>Community</h3><span class="tag soon">PLANNED</span>
+<a class="node" href="https://github.com/cellrishi-code/claude-skills-atlas/issues/113" rel="noopener">Contributor workflow</a><a class="node" href="https://github.com/cellrishi-code/claude-skills-atlas/issues/115" rel="noopener">Duplicate skill detection</a><a class="node" href="https://github.com/cellrishi-code/claude-skills-atlas/blob/main/ROADMAP.md" rel="noopener">Contribution drives</a></div>
+<div class="card branch"><h3>Explore</h3><span class="tag exp">EXPLORING</span>
+<a class="node" href="https://github.com/cellrishi-code/claude-skills-atlas/blob/main/ROADMAP.md" rel="noopener">Static browse site (you are here)</a><a class="node" href="https://github.com/cellrishi-code/claude-skills-atlas/blob/main/ROADMAP.md" rel="noopener">Semantic search</a></div>
+</div></div></section>
+
+<section class="final reveal"><div class="wrap">
+<h2>Ready to explore<br>the Atlas?</h2>
+<p class="sub" style="margin:0 auto 28px">Find it. Copy it. Adapt it. Share it.</p>
+<div class="cta"><a class="btn" href="#atlas">EXPLORE SKILLS</a><a class="btn ye" href="https://github.com/cellrishi-code/claude-skills-atlas" rel="noopener">★ STAR ON GITHUB</a><a class="btn gr" href="https://github.com/cellrishi-code/claude-skills-atlas/blob/main/CONTRIBUTING.md" rel="noopener">CONTRIBUTE</a></div>
+</div></section>
+</main>
+
+<footer><div class="wrap"><div class="cols">
+<div><div class="px" style="font-size:13px;margin-bottom:10px">Claude Skills Atlas</div><p style="color:var(--mute);margin:0;max-width:34ch">An open-source collection of reusable AI skills and prompts.</p></div>
+<nav aria-label="Footer"><ul class="flinks">
+<li><a href="https://github.com/cellrishi-code/claude-skills-atlas" rel="noopener">GitHub</a></li><li><a href="#atlas">Skills</a></li><li><a href="#arsenal">Prompts</a></li><li><a href="https://github.com/cellrishi-code/claude-skills-atlas/blob/main/CONTRIBUTING.md" rel="noopener">Contribute</a></li><li><a href="https://github.com/cellrishi-code/claude-skills-atlas/issues" rel="noopener">Issues</a></li><li><a href="https://github.com/cellrishi-code/claude-skills-atlas/blob/main/docs/architecture.md" rel="noopener">Documentation</a></li></ul></nav>
+</div></div>
+<div class="lane" aria-hidden="true"><span class="walker" data-sprite="bot" data-s="5"></span></div></footer>
+
+<dialog id="dlg" aria-labelledby="dt"><div class="dlg" id="dbody"></div></dialog>
+
+<script>
+const REPO="https://github.com/cellrishi-code/claude-skills-atlas",RAW="https://raw.githubusercontent.com/cellrishi-code/claude-skills-atlas/main/";
+const SK=`biology|Bioinformatics Workflow Planning|biology/bioinformatics-planning
+biology|Biology Literature Analysis|biology/literature-analysis
+biology|Biology Paper Analysis Skill|biology/paper-analysis
+chemistry|Chemistry Research Analysis|chemistry/research-analysis
+claude|Skill Author|claude/skill-author
+coding|Code Review Skill|coding/code-review
+coding|Codebase Explorer|coding/codebase-explorer
+coding|Codebase Understanding|coding/codebase-understanding
+coding|Debug Systematically|coding/debug-systematically
+coding|Implementation Planner|coding/implementation-planner
+coding|Implementation Review|coding/implementation-review
+coding|Test and Verify|coding/test-and-verify
+computer-science|Algorithms Learning|computer-science/algorithm-learning
+computer-science|System Design Basics|computer-science/system-design-basics
+cybersecurity|Defensive Security Review|cybersecurity/defensive-security-review
+cybersecurity|Lightweight Threat Modeling|cybersecurity/threat-modeling
+data|Data Analysis|data/analysis
+education|Tutor|education/tutor
+machine-learning|ML Experiment Analysis|machine-learning/experiment-analysis
+machine-learning|Model Evaluation|machine-learning/model-evaluation
+mathematics|Numerical Methods|mathematics/numerical-methods
+mathematics|Mathematics Problem Solver|mathematics/problem-solver
+mathematics|Mathematics Proof Solving|mathematics/proof-solving
+physics|Physics Research Analysis|physics/research-analysis
+python|Python Data Cleaning|python/data-cleaning
+python|Python Data Visualization|python/data-visualization
+research|Evidence Checker|research/evidence-checker
+research|Evidence Comparison|research/evidence-comparison
+research|Experimental Planning|research/experimental-planning
+research|Literature Synthesizer|research/literature-synthesizer
+research|Research Question|research/research-question
+research|Source Verification|research/source-verification
+web-development|API Design|web-development/api-design
+web-development|Frontend Planning|web-development/frontend-planning
+writing|Technical Editor|writing/technical-editor`.split("\n").map(l=>{const[c,n,p]=l.split("|");return{c,n,p:"skills/"+p+"/SKILL.md"}});
+const PR=`biology|Biology Literature Analysis Prompt|biology/literature-analysis
+claude|Turn a Successful Session Into a Skill|claude/turn-session-into-skill
+claude-code|Skill Quality Audit|claude-code/skill-quality-audit
+claude-code|Claude Code Task Breakdown Prompt|claude-code/task-breakdown
+coding|Debugging Prompt|coding/debugging
+coding|Plan Before Code|coding/plan-before-code
+coding|Safe Refactoring Prompt|coding/refactor
+coding|Review My Diff|coding/review-my-diff
+cybersecurity|Authorized Defensive Security Review|cybersecurity/authorized-defensive-review
+learning|Active Learning Prompt|learning/active-learning
+mathematics|Proof Explainer Prompt|mathematics/proof-explainer
+research|Research Claim Audit Prompt|research/claim-audit
+research|Claim-Evidence Matrix|research/claim-evidence-matrix
+research|Research Literature Review Prompt|research/literature-review
+research|Research Paper Reading Prompt|research/paper-reading`.split("\n").map(l=>{const[c,n,p]=l.split("|");return{c,n,p:"prompts/"+p+".md"}});
+const COL=["#8b5cf6","#22d3ee","#4ade80","#fbbf24","#fb7185","#60a5fa"];
+const cats=[...new Set(SK.map(s=>s.c))];const col=c=>COL[cats.indexOf(c)%COL.length]||COL[0];
+const label=c=>c.replace(/-/g," ").toUpperCase();
+const $=s=>document.querySelector(s);
+const esc=s=>s.replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+/* sprites */
+const SPR={
+bot:[".....yy.....",".....kk.....","..kkkkkkkk..",".kppppppppk.",".kpwwppwwpk.",".kpwkppkwpk.",".kppppppppk.","..kkkkkkkk..",".kcccppccck.","kkccccccccck","wkcckkkkcckw",".kkkk..kkkk."],
+planet:["..kkkk..",".kyyyyk.","kyyooyyk","kyyyyoyk","kyoyyyyk",".kyyyyk.","..kkkk.."],
+map:["kkkkkkkkkk","kwwwwwwwwk","kwrwwwwcwk","kwwrwwcwwk","kwwwrcwwwk","kwwwwwwyyk","kwwwwwwwwk","kkkkkkkkkk"],
+gem:["..kkkk..",".kllmmk.","kllmmmdk","kmmmmddk",".kmmddk.","..kmdk..","...kk..."]};
+const PAL={k:"#050310",p:"#8b5cf6",c:"#22d3ee",w:"#f4f0ff",y:"#fbbf24",o:"#f59e0b",r:"#fb7185",l:"#ffffffaa",d:"#00000066"};
+function sprite(n,s,m){const rows=SPR[n],pal={...PAL,m:m||"#8b5cf6"};let r="";rows.forEach((row,y)=>[...row].forEach((ch,x)=>{if(ch!=="."&&pal[ch])r+=`<rect x="${x}" y="${y}" width="1" height="1" fill="${pal[ch]}"/>`}));return`<svg class="sp" viewBox="0 0 ${rows[0].length} ${rows.length}" width="${rows[0].length*s}" height="${rows.length*s}" aria-hidden="true">${r}</svg>`}
+document.querySelectorAll("[data-sprite]").forEach(e=>e.innerHTML=sprite(e.dataset.sprite,+e.dataset.s||4,e.dataset.c));
+/* copy */
+async function copy(text,btn,idle){try{await navigator.clipboard.writeText(text)}catch{const t=document.createElement("textarea");t.value=text;document.body.append(t);t.select();try{document.execCommand("copy")}catch{}t.remove()}
+btn.textContent="✓ COPIED!";btn.classList.remove("pop");void btn.offsetWidth;btn.classList.add("pop");setTimeout(()=>btn.textContent=idle,1800)}
+/* atlas */
+let cat="all";
+function regions(){$("#regions").innerHTML=cats.map(c=>{const n=SK.filter(s=>s.c===c).length;return`<button class="card region" data-c="${c}" style="border-top-color:${col(c)}">${sprite("gem",4,col(c))}<b>${label(c)}</b><span>${n} skill${n>1?"s":""} · Explore →</span></button>`}).join("");
+$("#chips").innerHTML=["all",...cats].map(c=>`<button class="chip" data-c="${c}" aria-pressed="${c===cat}">${c==="all"?"ALL":label(c)}</button>`).join("")}
+function list(){const q=$("#q").value.trim().toLowerCase(),so=$("#sort").value;
+let a=SK.filter(s=>(cat==="all"||s.c===cat)&&(s.n+" "+s.c+" "+s.p).toLowerCase().includes(q));
+a.sort((x,y)=>so==="za"?y.n.localeCompare(x.n):so==="cat"?x.c.localeCompare(y.c)||x.n.localeCompare(y.n):x.n.localeCompare(y.n));
+$("#count").textContent=a.length+" / "+SK.length;
+$("#skills").innerHTML=a.length?a.map(s=>`<button class="card skill" data-p="${s.p}">${""}<div class="row">${sprite("gem",3,col(s.c))}<span class="tag" style="margin:0">${label(s.c)}</span></div><b>${esc(s.n)}</b><small>${s.p}</small></button>`).join(""):`<div class="empty card">No skills match. Add one?</div>`}
+function open(p){const s=SK.find(x=>x.p===p),rel=SK.filter(x=>x.c===s.c&&x!==s).slice(0,4);
+$("#dbody").innerHTML=`<button class="btn gh x" id="cl" aria-label="Close">✕</button><span class="tag">${label(s.c)}</span><span class="tag live">SKILL</span><h2 id="dt">${esc(s.n)}</h2>
+<p>A reusable <code>SKILL.md</code> instruction package in the <b>${label(s.c)}</b> region. Full instructions live in the repo:</p><p><code style="word-break:break-all">${s.p}</code></p>
+<div class="cta" style="margin:16px 0 22px"><button class="btn" id="cp">COPY SKILL</button><a class="btn cy" href="${REPO}/blob/main/${s.p}" rel="noopener">VIEW SOURCE</a></div>
+<h3>Related skills</h3><div class="rel">${rel.length?rel.map(r=>`<button class="chip" data-p="${r.p}">${esc(r.n)}</button>`).join(""):"<span>The only skill in this region so far. Add the next one!</span>"}</div>
+<h3>Contribute</h3><p>Fork, branch, add a skill from the <a href="${REPO}/blob/main/templates/skill-template.md" rel="noopener">skill template</a>, test it, open a PR. Read <a href="${REPO}/blob/main/CONTRIBUTING.md" rel="noopener">CONTRIBUTING.md</a>.</p>`;
+$("#cp").onclick=e=>copy(RAW+s.p,e.target,"COPY SKILL");$("#cl").onclick=()=>$("#dlg").close();$("#dlg").showModal()}
+$("#regions").onclick=e=>{const b=e.target.closest("[data-c]");if(b){cat=b.dataset.c;regions();list();$("#chips").scrollIntoView({block:"center"})}};
+$("#chips").onclick=e=>{const b=e.target.closest("[data-c]");if(b){cat=b.dataset.c;regions();list()}};
+$("#skills").onclick=e=>{const b=e.target.closest("[data-p]");if(b)open(b.dataset.p)};
+$("#dbody").onclick=e=>{const b=e.target.closest(".rel [data-p]");if(b)open(b.dataset.p)};
+$("#dlg").onclick=e=>{if(e.target.id==="dlg")e.target.close()};
+$("#q").oninput=list;$("#sort").onchange=list;
+/* prompts */
+$("#prompts").innerHTML=PR.map((p,i)=>`<article class="card pcard"><div class="hd">◆ PROMPT ITEM</div><h3>${esc(p.n)}</h3><div><span class="tag">${label(p.c)}</span><span class="tag">PROMPT</span></div><small>${p.p}</small><button class="btn ye" data-i="${i}">COPY PROMPT</button></article>`).join("");
+$("#prompts").onclick=e=>{const b=e.target.closest("[data-i]");if(b)copy(RAW+PR[+b.dataset.i].p,b,"COPY PROMPT")};
+$("#n-s").textContent=SK.length;$("#n-p").textContent=PR.length;
+/* nav */
+$("#menu").onclick=e=>{const o=$("#links").classList.toggle("open");e.currentTarget.setAttribute("aria-expanded",o)};
+$("#links").onclick=e=>{if(e.target.closest("a")){$("#links").classList.remove("open");$("#menu").setAttribute("aria-expanded","false")}};
+/* terminal typing */
+(function(){const t=["$ /plugin marketplace add cellrishi-code/claude-skills-atlas","$ /plugin install claude-skills-atlas@claude-skills-atlas"],el=$("#typed");
+if(matchMedia("(prefers-reduced-motion:reduce)").matches){el.textContent=t.join("\n");return}
+let l=0,c=0;(function tick(){el.innerHTML=t.slice(0,l).join("\n")+(l?"\n":"")+t[l].slice(0,c)+'<span class="caret"></span>';if(c<t[l].length){c++;setTimeout(tick,32)}else if(l<t.length-1){l++;c=0;setTimeout(tick,500)}})()})();
+/* reveal */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}}),{threshold:.08});
+document.querySelectorAll(".reveal").forEach(e=>io.observe(e));
+regions();list();
+</script>
+</body>
+</html>
